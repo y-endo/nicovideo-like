@@ -1,0 +1,48 @@
+{
+  "name": "nicovideo-like",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "stylelint": "stylelint --fix ./src/**/*.scss",
+    "serve": "NODE_ENV=development webpack-dev-server --config ./webpack.config.js",
+    "develop": "npm run serve & onchange './src/**/*.scss' -- npm run stylelint & gulp",
+    "build": "NODE_ENV=production webpack --colors --config ./webpack.config.js"
+  },
+  "repository": "https://github.com/y-endo/nicovideo-like.git",
+  "author": "YukiEndo",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.17.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-sass": "^4.0.2",
+    "onchange": "^6.1.0",
+    "prettier": "^1.19.1",
+    "stylelint": "^12.0.0",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard": "^19.0.0",
+    "stylelint-order": "^3.1.1",
+    "stylelint-scss": "^3.13.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "dependencies": {
+    "core-js": "^3.6.0",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.4"
+  }
+}
