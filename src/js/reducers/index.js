@@ -15,6 +15,9 @@ const initialState = {
       },
       items: []
     }
+  },
+  watch: {
+    comments: []
   }
 };
 
@@ -27,6 +30,16 @@ function topReducer(state = initialState.top, action) {
   }
 }
 
+function watchReducer(state = initialState.watch, action) {
+  switch (action.type) {
+    case types.POST_COMMENT:
+      return { ...state, comments: state.comments.concat(action.payload.comment) };
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
-  top: topReducer
+  top: topReducer,
+  watch: watchReducer
 });

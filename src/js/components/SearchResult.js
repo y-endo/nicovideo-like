@@ -12,6 +12,7 @@ export default class SearchResult extends React.Component {
       return (
         <VideoItem
           key={data.id.videoId}
+          id={data.id.videoId}
           title={data.snippet.title}
           thumbnail={data.snippet.thumbnails.high.url}
           channelName={data.snippet.channelTitle}

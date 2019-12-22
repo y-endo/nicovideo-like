@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { searchVideo } from '@/actions';
+
 import Top from '@/pages/Top';
 
 const mapStateToProps = state => {

@@ -9,3 +9,12 @@ export function searchVideo(value) {
     }
   };
 }
+
+export function postComment(value) {
+  return {
+    type: types.POST_COMMENT,
+    payload: {
+      comment: value
+    }
+  };
+}

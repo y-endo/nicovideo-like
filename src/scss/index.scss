@@ -73,6 +73,10 @@ p {
     margin-right: 0;
   }
 
+  &__link {
+    display: block;
+  }
+
   &__thumb {
     overflow: hidden;
   }
@@ -116,4 +120,119 @@ p {
     text-align: center;
     border: solid 1px #ddd;
   }
+}
+
+.player-container {
+  display: flex;
+}
+
+.player-area {
+  flex: 1;
+}
+
+.player-wrap {
+  position: relative;
+
+  &::before {
+    display: block;
+    padding-top: 56.25%;
+    content: '';
+  }
+}
+
+.comment-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin control-button {
+  width: 100px;
+  height: 30px;
+  padding: 0;
+  line-height: 30px;
+  background: transparent;
+  border: solid 1px #ddd;
+  outline: none;
+}
+
+#player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.player-control {
+  display: flex;
+
+  &__play-button {
+    @include control-button;
+  }
+
+  &__pause-button {
+    @include control-button;
+  }
+
+  &__duration {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+
+    &-current {
+      margin-right: 5px;
+    }
+
+    &-all {
+      margin-left: 5px;
+    }
+  }
+
+  &__rewind-button {
+    @include control-button;
+  }
+
+  &__skip-button {
+    @include control-button;
+  }
+}
+
+.comment-form {
+  display: flex;
+
+  &__input {
+    flex: 1;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 10px;
+    line-height: 40px;
+    border: solid 1px #ddd;
+    outline: none;
+  }
+
+  &__button {
+    flex: 0 0 100px;
+    box-sizing: border-box;
+    width: 100px;
+    height: 40px;
+    padding: 0;
+    line-height: 40px;
+    text-align: center;
+    background: transparent;
+    border: solid 1px #ddd;
+    outline: none;
+    cursor: pointer;
+  }
+}
+
+.comments {
+  flex: 0 0 350px;
+  box-sizing: border-box;
+  width: 350px;
+  margin-left: 10px;
+  border: solid 1px #ddd;
 }

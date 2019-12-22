@@ -5,6 +5,9 @@ module.exports = {
     node: true,
     es6: true
   },
+  globals: {
+    YT: true
+  },
   plugins: ['prettier', 'eslint-plugin-prettier'],
   extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:react/recommended'],
   parserOptions: {
