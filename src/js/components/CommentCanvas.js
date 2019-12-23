@@ -5,6 +5,7 @@ import moment from 'moment';
 import 'moment-duration-format';
 
 import getCanvasLineHeight from '@/utility/getCanvasLineHeight';
+import getRandomInteger from '@/utility/getRandomInteger';
 
 export default class CommentCanvas extends React.Component {
   constructor(props) {
@@ -35,6 +36,12 @@ export default class CommentCanvas extends React.Component {
     this.renderCanvas();
   }
 
+  componentWillUnmount() {
+    this.timeline.kill();
+    this.timeline.clear();
+    cancelAnimationFrame(this.animFrame);
+  }
+
   registerEventHandler() {
     window.addEventListener('resize', this.handleResize);
   }
@@ -49,35 +56,21 @@ export default class CommentCanvas extends React.Component {
   createTimeline() {
     if (this.canvasContext === null) return;
     const commentPosition = {};
+    this.timeline.kill();
     this.timeline.clear();
-    // this.props.comments.forEach(comment => {
-    const comments = [
-      { value: 'コメント1-1', currentTime: '00:00:00' },
-      { value: 'コメント1-2', currentTime: '00:00:05' },
-      { value: 'コメント1-3', currentTime: '00:00:00' },
-      { value: 'コメント1-4', currentTime: '00:00:10' },
-      { value: 'コメント1-5', currentTime: '00:00:00' },
-      { value: 'コメント1-6', currentTime: '00:00:30' },
-      { value: 'コメント1-7', currentTime: '00:00:00' },
-      { value: 'コメント1-8', currentTime: '00:01:00' },
-      { value: 'コメント1-9', currentTime: '00:04:00' },
-      { value: 'コメント1-10', currentTime: '00:00:00' },
-      { value: 'コメント1-11', currentTime: '00:00:00' },
-      { value: 'コメント1-12', currentTime: '00:00:00' }
-    ];
-    comments.forEach(comment => {
+    this.props.comments.forEach(comment => {
       const commentWidth = this.canvasContext.measureText(comment.value).width;
 
-      // テキストのY位置、同じ時間に投稿されたコメントを1行ずつずらす
-      if (commentPosition[comment.currentTime] === void 0) commentPosition[comment.currentTime] = 0;
-      commentPosition[comment.currentTime] += this.rowHeight;
-      if (commentPosition[comment.currentTime] > this.rowHeight * 10) {
-        commentPosition[comment.currentTime] = this.rowHeight;
-      }
+      // テキストのY位置、同じ時間に投稿されたコメントは10行まで重ならないようにする
+      if (commentPosition[comment.currentTime] === void 0)
+        commentPosition[comment.currentTime] = { positions: this.getRandomCommentPosition(), count: -1 };
+      commentPosition[comment.currentTime].count += 1;
 
+      const { positions, count } = commentPosition[comment.currentTime];
+      const y = count >= 10 ? positions[getRandomInteger(0, 9)] : positions[count];
       const text = {
         x: this.canvas.current.width,
-        y: commentPosition[comment.currentTime]
+        y
       };
 
       this.timeline.add(
@@ -91,9 +84,12 @@ export default class CommentCanvas extends React.Component {
         parseInt(moment.duration(comment.currentTime, 'HH:mm:ss').format('ss'), 10)
       );
     });
+
+    this.seekTimeline(this.props.getCurrentTime());
   }
 
   playTimeline() {
+    this.seekTimeline(this.props.getCurrentTime());
     this.timeline.play();
   }
 
@@ -101,9 +97,30 @@ export default class CommentCanvas extends React.Component {
     this.timeline.pause();
   }
 
+  seekTimeline(seconds) {
+    this.timeline.seek(seconds);
+  }
+
   renderCanvas() {
     this.canvasContext.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
-    requestAnimationFrame(this.renderCanvas.bind(this));
+    this.animFrame = requestAnimationFrame(this.renderCanvas.bind(this));
+  }
+
+  getRandomCommentPosition() {
+    const positions = [];
+
+    // コメントの1~10行目までの位置
+    for (let index = 1; index <= 10; index++) {
+      positions.push(this.rowHeight * index);
+    }
+
+    // 配列シャッフル
+    for (let index = positions.length - 1; index >= 0; index--) {
+      const rand = Math.floor(Math.random() * (index + 1));
+      [positions[index], positions[rand]] = [positions[rand], positions[index]];
+    }
+
+    return positions;
   }
 }
 

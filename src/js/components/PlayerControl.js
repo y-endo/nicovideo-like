@@ -6,7 +6,6 @@ import 'moment-duration-format';
 export default class PlayerControl extends React.Component {
   constructor(props) {
     super(props);
-    this.format = '';
     this.state = {
       currentTime: 0,
       duration: 0
@@ -26,10 +25,18 @@ export default class PlayerControl extends React.Component {
           <span className="player-control__duration-current">{this.state.currentTime}</span>/
           <span className="player-control__duration-all">{this.state.duration}</span>
         </div>
-        <button className="player-control__rewind-button">&lt; 10</button>
-        <button className="player-control__skip-button">10 &gt;</button>
+        <button className="player-control__rewind-button" onClick={this.handleRewindClick.bind(this)}>
+          &lt; 10
+        </button>
+        <button className="player-control__skip-button" onClick={this.handleSkipClick.bind(this)}>
+          10 &gt;
+        </button>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.animFrame);
   }
 
   handlePlayClick() {
@@ -40,29 +47,30 @@ export default class PlayerControl extends React.Component {
     this.props.pauseVideo();
   }
 
+  handleRewindClick() {
+    const currentTime = this.props.getCurrentTime();
+    this.props.seekTo(currentTime - 10);
+  }
+
+  handleSkipClick() {
+    const currentTime = this.props.getCurrentTime();
+    this.props.seekTo(currentTime + 10);
+  }
+
   setCurrentTime() {
-    const current = this.props.getCurrentTime();
+    const currentTime = this.props.getCurrentTime();
 
     this.setState({
-      currentTime: moment.duration(current, 'seconds').format(this.format, { trim: false })
+      currentTime: moment.duration(currentTime, 'seconds').format(this.props.timeFormat, { trim: false })
     });
 
-    requestAnimationFrame(this.setCurrentTime.bind(this));
+    this.animFrame = requestAnimationFrame(this.setCurrentTime.bind(this));
   }
 
   setDuration() {
-    const all = this.props.getDuration();
-
-    if (all >= 36000) {
-      this.format = 'HH:mm:ss';
-    } else if (all >= 3600) {
-      this.format = 'H:mm:ss';
-    } else {
-      this.format = 'mm:ss';
-    }
-
     this.setState({
-      duration: moment.duration(all, 'seconds').format(this.format, { trim: false })
+      currentTime: moment.duration(0, 'seconds').format(this.props.timeFormat, { trim: false }),
+      duration: moment.duration(this.props.getDuration(), 'seconds').format(this.props.timeFormat, { trim: false })
     });
   }
 }
@@ -70,6 +78,8 @@ export default class PlayerControl extends React.Component {
 PlayerControl.propTypes = {
   playVideo: PropTypes.func.isRequired,
   pauseVideo: PropTypes.func.isRequired,
+  seekTo: PropTypes.func.isRequired,
   getDuration: PropTypes.func.isRequired,
-  getCurrentTime: PropTypes.func.isRequired
+  getCurrentTime: PropTypes.func.isRequired,
+  timeFormat: PropTypes.string.isRequired
 };

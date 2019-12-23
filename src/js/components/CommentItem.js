@@ -5,25 +5,16 @@ import 'moment-duration-format';
 
 export default class CommentItem extends React.Component {
   render() {
-    const currentTimeSeconds = moment.duration(this.props.data.currentTime, 'HH:mm:ss').format('ss');
-
-    let format = '';
-    if (currentTimeSeconds >= 36000) {
-      format = 'HH:mm:ss';
-    } else if (currentTimeSeconds >= 3600) {
-      format = 'H:mm:ss';
-    } else {
-      format = 'mm:ss';
-    }
-
+    const formattedCurrentTime = moment.duration(this.props.data.currentTime, 'HH:mm:ss').format(this.props.timeFormat, { trim: false });
     return (
-      <li className="comment-list__item">
-        {moment.duration(parseInt(currentTimeSeconds, 10), 'seconds').format(format, { trim: false }) + ' | ' + this.props.data.value}
+      <li className="comment-list__item" data-current-time={formattedCurrentTime}>
+        {formattedCurrentTime + ' | ' + this.props.data.value}
       </li>
     );
   }
 }
 
 CommentItem.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  timeFormat: PropTypes.string.isRequired
 };

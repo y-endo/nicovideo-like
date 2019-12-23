@@ -13,9 +13,11 @@ export default class Player extends React.Component {
     super(props);
 
     this.state = {
+      isFirstPlay: false,
       isReady: false
     };
 
+    this.timeFormat = 'mm:ss';
     this.commentCanvas = React.createRef();
     this.playerControl = React.createRef();
   }
@@ -31,14 +33,16 @@ export default class Player extends React.Component {
           <PlayerControl
             playVideo={this.playVideo.bind(this)}
             pauseVideo={this.pauseVideo.bind(this)}
+            seekTo={this.seekTo.bind(this)}
             getDuration={this.getDuration.bind(this)}
             getCurrentTime={this.getCurrentTime.bind(this)}
             ref={this.playerControl}
+            timeFormat={this.timeFormat}
           />
           <CommentForm getCurrentTime={this.getCurrentTime.bind(this)} postComment={this.props.postComment} />
         </div>
         <div className="comments">
-          <CommentList comments={this.props.watch.comments} />
+          <CommentList comments={this.props.watch.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.timeFormat} />
         </div>
       </div>
     );
@@ -60,7 +64,8 @@ export default class Player extends React.Component {
           disablekb: 1
         },
         events: {
-          onReady: this.handlePlayerReady.bind(this)
+          onReady: this.handlePlayerReady.bind(this),
+          onStateChange: this.handleStateChange.bind(this)
         }
       });
     });
@@ -69,8 +74,50 @@ export default class Player extends React.Component {
   handlePlayerReady() {
     this.setState({ isReady: true });
 
+    const duration = this.getDuration();
+    if (duration >= 36000) {
+      this.timeFormat = 'HH:mm:ss';
+    } else if (duration >= 3600) {
+      this.timeFormat = 'H:mm:ss';
+    } else {
+      this.timeFormat = 'mm:ss';
+    }
+
     this.playerControl.current.setDuration();
-    this.playerControl.current.setCurrentTime();
+  }
+
+  handleStateChange(event) {
+    switch (event.data) {
+      case -1:
+        // 未開始
+        this.commentCanvas.current.pauseTimeline();
+        break;
+      case 0:
+        // 終了
+        this.commentCanvas.current.pauseTimeline();
+        break;
+      case 1:
+        // 再生中
+        this.commentCanvas.current.playTimeline();
+        break;
+      case 2:
+        // 一時停止
+        this.commentCanvas.current.pauseTimeline();
+        break;
+      case 3:
+        // バッファリング中
+        this.commentCanvas.current.pauseTimeline();
+        break;
+      case 5:
+        // 頭出し済み
+        break;
+    }
+
+    if (event.data === 1 && !this.state.isFirstPlay) {
+      this.setState({ isFirstPlay: true });
+      this.playerControl.current.setDuration();
+      this.playerControl.current.setCurrentTime();
+    }
   }
 
   getDuration() {
@@ -80,19 +127,24 @@ export default class Player extends React.Component {
 
   getCurrentTime() {
     if (!this.state.isReady) return -1;
+    if (this.player.getPlayerState() === 0) return this.getDuration();
     return this.player.getCurrentTime();
   }
 
   playVideo() {
     if (!this.state.isReady) return;
     this.player.playVideo();
-    this.commentCanvas.current.playTimeline();
   }
 
   pauseVideo() {
     if (!this.state.isReady) return;
     this.player.pauseVideo();
-    this.commentCanvas.current.pauseTimeline();
+  }
+
+  seekTo(seconds) {
+    if (!this.state.isReady) return;
+    this.player.seekTo(seconds);
+    this.commentCanvas.current.seekTimeline(seconds);
   }
 }
 

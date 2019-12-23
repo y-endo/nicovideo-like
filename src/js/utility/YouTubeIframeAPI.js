@@ -1,3 +1,6 @@
+/**
+ * YoutubeIframAPIの読み込み管理クラス
+ */
 class YouTubeIframeAPI {
   constructor() {
     this.isLoaded = false;

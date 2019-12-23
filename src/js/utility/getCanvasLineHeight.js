@@ -1,5 +1,5 @@
 /**
- * CanvasのfillTextで使われているline-heightを返す
+ * CanvasのfillTextで設定されているline-heightを返す
  */
 const getCanvasLineHeight = () => {
   let canvas = document.createElement('canvas');

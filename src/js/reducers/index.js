@@ -21,6 +21,15 @@ const initialState = {
   }
 };
 
+for (let i = 0; i < 100; i++) {
+  const minutes = Math.floor(i / 60);
+  const seconds = i - minutes * 60;
+  initialState.watch.comments.push({
+    value: `コメント${i}`,
+    currentTime: `00:0${minutes}:${('0' + seconds).slice(-2)}`
+  });
+}
+
 function topReducer(state = initialState.top, action) {
   switch (action.type) {
     case types.SEARCH_VIDEO:
