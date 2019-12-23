@@ -13,6 +13,11 @@ export default class CommentList extends React.Component {
   }
 
   render() {
+    this.props.comments.sort((a, b) => {
+      if (a.currentTime > b.currentTime) return 1;
+      if (a.currentTime < b.currentTime) return -1;
+      return 0;
+    });
     const commentItems = this.props.comments.map((data, index) => {
       return <CommentItem data={data} key={index} timeFormat={this.props.timeFormat} />;
     });

@@ -12,6 +12,7 @@ export default class CommentCanvas extends React.Component {
     super(props);
     this.canvas = React.createRef();
     this.canvasContext = null;
+    this.commentMaxRow = 20;
     this.timeline = new TimelineMax({ paused: true });
   }
 
@@ -25,7 +26,7 @@ export default class CommentCanvas extends React.Component {
     this.handleResize();
 
     // コメントを1行分の高さ
-    this.rowHeight = this.canvas.current.height / 10;
+    this.rowHeight = this.canvas.current.height / this.commentMaxRow;
     // 画面にコメントが10行収まるフォントサイズ
     this.fontSize = this.rowHeight * getCanvasLineHeight;
 
@@ -67,14 +68,14 @@ export default class CommentCanvas extends React.Component {
       commentPosition[comment.currentTime].count += 1;
 
       const { positions, count } = commentPosition[comment.currentTime];
-      const y = count >= 10 ? positions[getRandomInteger(0, 9)] : positions[count];
+      const y = count >= this.commentMaxRow ? positions[getRandomInteger(0, this.commentMaxRow - 1)] : positions[count];
       const text = {
         x: this.canvas.current.width,
         y
       };
 
       this.timeline.add(
-        TweenMax.to(text, 2, {
+        TweenMax.to(text, 3, {
           x: -commentWidth,
           ease: Linear.easeNone,
           onUpdate: () => {
@@ -110,7 +111,7 @@ export default class CommentCanvas extends React.Component {
     const positions = [];
 
     // コメントの1~10行目までの位置
-    for (let index = 1; index <= 10; index++) {
+    for (let index = 1; index <= this.commentMaxRow; index++) {
       positions.push(this.rowHeight * index);
     }
 

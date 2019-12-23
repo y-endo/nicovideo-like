@@ -60,8 +60,8 @@ export default class Player extends React.Component {
           playsinline: 1,
           iv_load_policy: 3,
           controls: 0,
-          modestbranding: 1,
-          disablekb: 1
+          modestbranding: 1
+          // disablekb: 1
         },
         events: {
           onReady: this.handlePlayerReady.bind(this),

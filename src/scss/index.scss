@@ -245,4 +245,15 @@ p {
   width: 100%;
   height: 100%;
   overflow: auto;
+
+  &__item {
+    display: flex;
+    align-items: center;
+  }
+
+  &__item-time {
+    margin-right: 5px;
+    padding: 5px;
+    border-right: solid 1px #ddd;
+  }
 }

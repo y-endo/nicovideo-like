@@ -8,7 +8,8 @@ export default class CommentItem extends React.Component {
     const formattedCurrentTime = moment.duration(this.props.data.currentTime, 'HH:mm:ss').format(this.props.timeFormat, { trim: false });
     return (
       <li className="comment-list__item" data-current-time={formattedCurrentTime}>
-        {formattedCurrentTime + ' | ' + this.props.data.value}
+        <span className="comment-list__item-time">{formattedCurrentTime}</span>
+        <span className="comment-list__item-text">{this.props.data.value}</span>
       </li>
     );
   }
