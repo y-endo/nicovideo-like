@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { API_KEY } from '@/constants/Config';
+import { YOUTUBE_API_KEY } from '@/constants/Config';
 
 export default class SearchForm extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class SearchForm extends React.Component {
   }
 
   async searchVideo(value) {
-    const parameter = `part=snippet&key=${API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${value}`;
+    const parameter = `part=snippet&key=${YOUTUBE_API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${value}`;
 
     const data = await fetch('https://www.googleapis.com/youtube/v3/search?' + parameter, { credentials: 'include' })
       .then(response => response.json())

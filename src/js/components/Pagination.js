@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { API_KEY } from '@/constants/Config';
+import { YOUTUBE_API_KEY } from '@/constants/Config';
 
 export default class Pagination extends React.Component {
   render() {
@@ -35,7 +35,7 @@ export default class Pagination extends React.Component {
   }
 
   async movePage(pageToken) {
-    const parameter = `part=snippet&key=${API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${this.props.top.searchQuery}&pageToken=${pageToken}`;
+    const parameter = `part=snippet&key=${YOUTUBE_API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${this.props.top.searchQuery}&pageToken=${pageToken}`;
 
     const data = await fetch('https://www.googleapis.com/youtube/v3/search?' + parameter, { credentials: 'include' })
       .then(response => response.json())

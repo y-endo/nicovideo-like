@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 
 import VideoItem from './VideoItem';
 import Pagination from './Pagination';
 
 export default class SearchResult extends React.Component {
   render() {
+    console.log(queryString.parse(this.props.location.search));
     let videoItems;
 
     videoItems = this.props.top.searchResultData.items.map(data => {
@@ -31,5 +33,6 @@ export default class SearchResult extends React.Component {
 }
 
 SearchResult.propTypes = {
-  top: PropTypes.object.isRequired
+  top: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };

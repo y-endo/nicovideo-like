@@ -10,6 +10,15 @@ export function searchVideo(value) {
   };
 }
 
+export function loadComments(value) {
+  return {
+    type: types.LOAD_COMMENTS,
+    payload: {
+      comments: value
+    }
+  };
+}
+
 export function postComment(value) {
   return {
     type: types.POST_COMMENT,

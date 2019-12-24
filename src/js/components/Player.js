@@ -7,6 +7,7 @@ import CommentCanvas from './CommentCanvas';
 import PlayerControl from './PlayerControl';
 
 import YouTubeIframeAPI from '@/utility/YouTubeIframeAPI';
+import FirestoreManager from '@/utility/FirestoreManager';
 
 export default class Player extends React.Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class Player extends React.Component {
             ref={this.playerControl}
             timeFormat={this.timeFormat}
           />
-          <CommentForm getCurrentTime={this.getCurrentTime.bind(this)} postComment={this.props.postComment} />
+          <CommentForm getCurrentTime={this.getCurrentTime.bind(this)} postComment={this.props.postComment} videoId={this.props.match.params.id} />
         </div>
         <div className="comments">
           <CommentList comments={this.props.watch.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.timeFormat} />
@@ -69,6 +70,14 @@ export default class Player extends React.Component {
         }
       });
     });
+
+    FirestoreManager.getData(this.props.match.params.id).then(data => {
+      if (data && data.comments) this.props.loadComments(data.comments);
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.loadComments([]);
   }
 
   handlePlayerReady() {
@@ -151,5 +160,6 @@ export default class Player extends React.Component {
 Player.propTypes = {
   match: PropTypes.object.isRequired,
   postComment: PropTypes.func.isRequired,
+  loadComments: PropTypes.func.isRequired,
   watch: PropTypes.object.isRequired
 };

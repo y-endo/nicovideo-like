@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { postComment } from '@/actions';
+import { loadComments, postComment } from '@/actions';
 
 import Watch from '@/pages/Watch';
 
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    loadComments: value => dispatch(loadComments(value)),
     postComment: value => dispatch(postComment(value))
   };
 };
