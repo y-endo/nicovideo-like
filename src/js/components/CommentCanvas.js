@@ -40,13 +40,19 @@ export default class CommentCanvas extends React.Component {
   componentWillUnmount() {
     this.timeline.kill();
     this.timeline.clear();
-    cancelAnimationFrame(this.animFrame);
+    cancelAnimationFrame(this.renderCanvasFrame);
   }
 
+  /**
+   * イベント登録
+   */
   registerEventHandler() {
     window.addEventListener('resize', this.handleResize);
   }
 
+  /**
+   * リサイズイベント
+   */
   handleResize() {
     const parent = this.canvas.current.parentNode;
 
@@ -54,21 +60,28 @@ export default class CommentCanvas extends React.Component {
     this.canvas.current.height = parent.offsetHeight;
   }
 
+  /**
+   * コメントのタイムライン作成(TimelineMax)
+   */
   createTimeline() {
     if (this.canvasContext === null) return;
     const commentPosition = {};
     this.timeline.kill();
     this.timeline.clear();
+
     this.props.comments.forEach(comment => {
       const commentWidth = this.canvasContext.measureText(comment.value).width;
 
-      // テキストのY位置、同じ時間に投稿されたコメントは10行まで重ならないようにする
+      // テキストのY位置、同じ時間に投稿されたコメントはcommentMaxRow行分まで重ならないようにする
       if (commentPosition[comment.currentTime] === void 0)
         commentPosition[comment.currentTime] = { positions: this.getRandomCommentPosition(), count: -1 };
       commentPosition[comment.currentTime].count += 1;
-
       const { positions, count } = commentPosition[comment.currentTime];
+
+      // 同じ時間に投稿されたコメントがcommentMaxRowを超えた場合はランダムな位置
       const y = count >= this.commentMaxRow ? positions[getRandomInteger(0, this.commentMaxRow - 1)] : positions[count];
+
+      // TweenMaxで動かす用の疑似テキストオブジェクト
       const text = {
         x: this.canvas.current.width,
         y
@@ -86,27 +99,44 @@ export default class CommentCanvas extends React.Component {
       );
     });
 
+    // 動画の再生位置と同期させる
     this.seekTimeline(this.props.getCurrentTime());
   }
 
+  /**
+   * コメントタイムライン再生
+   */
   playTimeline() {
     this.seekTimeline(this.props.getCurrentTime());
     this.timeline.play();
   }
 
+  /**
+   * コメントタイムライン一時停止
+   */
   pauseTimeline() {
     this.timeline.pause();
   }
 
+  /**
+   * コメントタイムラインスキップ
+   * @param {Number} seconds 秒数
+   */
   seekTimeline(seconds) {
     this.timeline.seek(seconds);
   }
 
+  /**
+   * Canvasを描画する
+   */
   renderCanvas() {
     this.canvasContext.clearRect(0, 0, this.canvas.current.width, this.canvas.current.height);
-    this.animFrame = requestAnimationFrame(this.renderCanvas.bind(this));
+    this.renderCanvasFrame = requestAnimationFrame(this.renderCanvas.bind(this));
   }
 
+  /**
+   * 1画面に収まる分のコメントy位置を配列で返す
+   */
   getRandomCommentPosition() {
     const positions = [];
 

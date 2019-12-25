@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { YOUTUBE_API_KEY } from '@/constants/Config';
-
 export default class Pagination extends React.Component {
   render() {
     const canPrev = this.props.top.searchResultData.prevPageToken !== void 0;
@@ -24,6 +22,10 @@ export default class Pagination extends React.Component {
     );
   }
 
+  /**
+   * クリックイベント
+   * @param {Event} e イベントオブジェクト
+   */
   handleClick(e) {
     e.preventDefault();
 
@@ -34,20 +36,12 @@ export default class Pagination extends React.Component {
     }
   }
 
-  async movePage(pageToken) {
-    const parameter = `part=snippet&key=${YOUTUBE_API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${this.props.top.searchQuery}&pageToken=${pageToken}`;
-
-    const data = await fetch('https://www.googleapis.com/youtube/v3/search?' + parameter, { credentials: 'include' })
-      .then(response => response.json())
-      .then(json => json)
-      .catch(error => {
-        new Error(error);
-      });
-
-    this.props.searchVideo({
-      query: this.props.top.searchQuery,
-      data
-    });
+  /**
+   * 前or次ページへ移動
+   * @param {String} pageToken YouTubeAPIのpageToken
+   */
+  movePage(pageToken) {
+    window.location.search = `query=${this.props.top.searchQuery}&pageToken=${pageToken}`;
   }
 }
 

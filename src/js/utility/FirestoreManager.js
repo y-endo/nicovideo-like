@@ -5,6 +5,10 @@ class FirestoreManager {
     this.isAdding = false;
   }
 
+  /**
+   * データ取得
+   * @param {String} id ドキュメントID
+   */
   getData(id) {
     return new Promise((resolve, reject) => {
       firestore
@@ -20,6 +24,11 @@ class FirestoreManager {
     });
   }
 
+  /**
+   * データの追加
+   * @param {String} id ドキュメントID
+   * @param {Object} data 追加データ
+   */
   addData(id, data) {
     if (this.isAdding) return;
     this.isAdding = true;

@@ -33,20 +33,27 @@ export default class CommentList extends React.Component {
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame(this.animFrame);
+    cancelAnimationFrame(this.watchCurrentTimeFrame);
   }
 
+  /**
+   * 動画の再生時間を監視する
+   */
   watchCurrentTime() {
     const currentTime = Math.floor(this.props.getCurrentTime());
 
+    // 1秒ごとにコメントリストのスクロール位置を更新する
     if (currentTime !== this.currentTime) {
       this.currentTime = currentTime;
       this.setScrollTop();
     }
 
-    this.animFrame = requestAnimationFrame(this.watchCurrentTime.bind(this));
+    this.watchCurrentTimeFrame = requestAnimationFrame(this.watchCurrentTime.bind(this));
   }
 
+  /**
+   * コメントリストのスクロール位置を設定
+   */
   setScrollTop() {
     const formattedCurrentTime = moment.duration(this.currentTime, 'seconds').format(this.props.timeFormat, { trim: false });
 

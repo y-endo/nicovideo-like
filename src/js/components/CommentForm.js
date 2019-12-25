@@ -22,6 +22,10 @@ export default class CommentForm extends React.Component {
     );
   }
 
+  /**
+   * サブミットイベント
+   * @param {Event} e イベントオブジェクト
+   */
   handleSubmit(e) {
     e.preventDefault();
 
@@ -29,6 +33,7 @@ export default class CommentForm extends React.Component {
     let currentTime = this.props.getCurrentTime();
 
     if (value !== '' && typeof currentTime === 'number' && currentTime >= 0) {
+      // firestoreに登録するコメントのデータ
       const commentData = {
         id: uuidv4(),
         value,

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 
-import { YOUTUBE_API_KEY } from '@/constants/Config';
+import searchVideo from '@/utility/searchVideo';
 
 export default class SearchForm extends React.Component {
   constructor(props) {
@@ -18,24 +19,37 @@ export default class SearchForm extends React.Component {
     );
   }
 
+  componentDidMount() {
+    const locationQuery = queryString.parse(this.props.location.search);
+
+    if (locationQuery.query && locationQuery.query !== '') {
+      this.input.current.value = locationQuery.query;
+      this.searchVideo(locationQuery.query, locationQuery.pageToken || '');
+    }
+  }
+
+  /**
+   * 検索のサブミットイベント
+   * @param {Event} e イベントオブジェクト
+   */
   handleSubmit(e) {
     e.preventDefault();
 
     const value = this.input.current.value;
 
     if (value === '') return;
-    this.searchVideo(value);
+    window.location.search = `query=${value}`;
   }
 
-  async searchVideo(value) {
-    const parameter = `part=snippet&key=${YOUTUBE_API_KEY}&maxResults=40&type=video&videoEmbeddable=true&q=${value}`;
+  /**
+   * 動画の検索
+   * @param {String} value 検索する文言
+   * @param {String} pageToken YouTubeAPIのpageToken
+   */
+  async searchVideo(value, pageToken = '') {
+    const data = await searchVideo(value, pageToken).then(json => json);
 
-    const data = await fetch('https://www.googleapis.com/youtube/v3/search?' + parameter, { credentials: 'include' })
-      .then(response => response.json())
-      .then(json => json)
-      .catch(error => {
-        new Error(error);
-      });
+    if (data.error) return;
 
     this.props.searchVideo({
       query: value,
@@ -45,5 +59,6 @@ export default class SearchForm extends React.Component {
 }
 
 SearchForm.propTypes = {
-  searchVideo: PropTypes.func.isRequired
+  searchVideo: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired
 };

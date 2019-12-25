@@ -14,7 +14,6 @@ export default class Player extends React.Component {
     super(props);
 
     this.state = {
-      isFirstPlay: false,
       isReady: false
     };
 
@@ -37,6 +36,10 @@ export default class Player extends React.Component {
             seekTo={this.seekTo.bind(this)}
             getDuration={this.getDuration.bind(this)}
             getCurrentTime={this.getCurrentTime.bind(this)}
+            getVolume={this.getVolume.bind(this)}
+            mute={this.mute.bind(this)}
+            unMute={this.unMute.bind(this)}
+            setVolume={this.setVolume.bind(this)}
             ref={this.playerControl}
             timeFormat={this.timeFormat}
           />
@@ -50,6 +53,7 @@ export default class Player extends React.Component {
   }
 
   componentDidMount() {
+    // YouTubeのiframe作成
     YouTubeIframeAPI.ready().then(() => {
       this.player = new YT.Player('player', {
         width: '1920',
@@ -61,16 +65,17 @@ export default class Player extends React.Component {
           playsinline: 1,
           iv_load_policy: 3,
           controls: 0,
-          modestbranding: 1
-          // disablekb: 1
+          modestbranding: 1,
+          disablekb: 1
         },
         events: {
           onReady: this.handlePlayerReady.bind(this),
-          onStateChange: this.handleStateChange.bind(this)
+          onStateChange: this.handlePlayerStateChange.bind(this)
         }
       });
     });
 
+    // 動画のコメントデータを取得する
     FirestoreManager.getData(this.props.match.params.id).then(data => {
       if (data && data.comments) this.props.loadComments(data.comments);
     });
@@ -80,6 +85,9 @@ export default class Player extends React.Component {
     this.props.loadComments([]);
   }
 
+  /**
+   * YouTubeのreadyイベント
+   */
   handlePlayerReady() {
     this.setState({ isReady: true });
 
@@ -92,10 +100,14 @@ export default class Player extends React.Component {
       this.timeFormat = 'mm:ss';
     }
 
-    this.playerControl.current.setDuration();
+    this.playerControl.current.initialize();
   }
 
-  handleStateChange(event) {
+  /**
+   * YouTubeAPIのstateChangeイベント
+   * @param {Object} event イベントオブジェクト
+   */
+  handlePlayerStateChange(event) {
     switch (event.data) {
       case -1:
         // 未開始
@@ -122,38 +134,86 @@ export default class Player extends React.Component {
         break;
     }
 
-    if (event.data === 1 && !this.state.isFirstPlay) {
-      this.setState({ isFirstPlay: true });
-      this.playerControl.current.setDuration();
-      this.playerControl.current.setCurrentTime();
-    }
+    this.playerControl.current.handlePlayerStateChange(event);
   }
 
+  /**
+   * 動画の長さ(秒)を取得
+   */
   getDuration() {
     if (!this.state.isReady) return -1;
     return this.player.getDuration();
   }
 
+  /**
+   * 動画の現在の再生時間を取得
+   */
   getCurrentTime() {
     if (!this.state.isReady) return -1;
     if (this.player.getPlayerState() === 0) return this.getDuration();
     return this.player.getCurrentTime();
   }
 
+  /**
+   * 動画の音量を取得
+   */
+  getVolume() {
+    if (!this.state.isReady) return;
+    return {
+      value: this.player.getVolume(),
+      isMuted: this.player.isMuted()
+    };
+  }
+
+  /**
+   * 動画の音量を設定
+   * @param {Number} volume 音量
+   */
+  setVolume(volume) {
+    if (!this.state.isReady) return;
+    this.player.setVolume(volume);
+  }
+
+  /**
+   * 動画を再生
+   */
   playVideo() {
     if (!this.state.isReady) return;
     this.player.playVideo();
   }
 
+  /**
+   * 動画を一時停止
+   */
   pauseVideo() {
     if (!this.state.isReady) return;
     this.player.pauseVideo();
   }
 
+  /**
+   * 動画をスキップ
+   * @param {Number} seconds 再生位置(秒)
+   */
   seekTo(seconds) {
     if (!this.state.isReady) return;
     this.player.seekTo(seconds);
     this.commentCanvas.current.seekTimeline(seconds);
+  }
+
+  /**
+   * 動画をミュートにする
+   */
+  mute() {
+    if (!this.state.isReady) return;
+    this.player.mute();
+  }
+
+  /**
+   * 動画のミュートを解除
+   */
+  unMute() {
+    if (!this.state.isReady) return;
+    this.player.unMute();
   }
 }
 
