@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TweenMax, TimelineMax, Linear } from 'gsap/all';
-import moment from 'moment';
-import 'moment-duration-format';
 
 import getCanvasLineHeight from '@/utility/getCanvasLineHeight';
 import getRandomInteger from '@/utility/getRandomInteger';
+import convertDuration from '@/utility/convertDuration';
 
 export default class CommentCanvas extends React.Component {
   constructor(props) {
@@ -23,16 +22,8 @@ export default class CommentCanvas extends React.Component {
 
   componentDidMount() {
     this.registerEventHandler();
-    this.handleResize();
-
-    // コメントを1行分の高さ
-    this.rowHeight = this.canvas.current.height / this.commentMaxRow;
-    // 画面にコメントが10行収まるフォントサイズ
-    this.fontSize = this.rowHeight * getCanvasLineHeight;
-
-    this.canvasContext = this.canvas.current.getContext('2d');
-    this.canvasContext.font = `bold ${this.fontSize}px Meiryo, メイリオ`;
-    this.canvasContext.fillStyle = '#fff';
+    this.updateCanvas();
+    setTimeout(this.updateCanvas.bind(this), 500);
 
     this.renderCanvas();
   }
@@ -47,17 +38,14 @@ export default class CommentCanvas extends React.Component {
    * イベント登録
    */
   registerEventHandler() {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   /**
    * リサイズイベント
    */
   handleResize() {
-    const parent = this.canvas.current.parentNode;
-
-    this.canvas.current.width = parent.offsetWidth;
-    this.canvas.current.height = parent.offsetHeight;
+    this.updateCanvas();
   }
 
   /**
@@ -95,7 +83,7 @@ export default class CommentCanvas extends React.Component {
             this.canvasContext.fillText(comment.value, text.x, text.y);
           }
         }),
-        parseInt(moment.duration(comment.currentTime, 'HH:mm:ss').format('ss'), 10)
+        convertDuration.HHmmssToDuration(comment.currentTime)
       );
     });
 
@@ -124,6 +112,22 @@ export default class CommentCanvas extends React.Component {
    */
   seekTimeline(seconds) {
     this.timeline.seek(seconds);
+  }
+
+  updateCanvas() {
+    const parent = this.canvas.current.parentNode;
+
+    this.canvas.current.width = parent.offsetWidth;
+    this.canvas.current.height = parent.offsetHeight;
+
+    // コメントを1行分の高さ
+    this.rowHeight = this.canvas.current.height / this.commentMaxRow;
+    // 画面にコメントが10行収まるフォントサイズ
+    this.fontSize = this.rowHeight * getCanvasLineHeight;
+
+    this.canvasContext = this.canvas.current.getContext('2d');
+    this.canvasContext.font = `bold ${this.fontSize}px Meiryo, メイリオ`;
+    this.canvasContext.fillStyle = '#fff';
   }
 
   /**

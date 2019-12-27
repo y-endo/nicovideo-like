@@ -14,10 +14,10 @@ export default class Player extends React.Component {
     super(props);
 
     this.state = {
+      timeFormat: 'mm:ss',
       isReady: false
     };
 
-    this.timeFormat = 'mm:ss';
     this.commentCanvas = React.createRef();
     this.playerControl = React.createRef();
   }
@@ -41,12 +41,12 @@ export default class Player extends React.Component {
             unMute={this.unMute.bind(this)}
             setVolume={this.setVolume.bind(this)}
             ref={this.playerControl}
-            timeFormat={this.timeFormat}
+            timeFormat={this.state.timeFormat}
           />
           <CommentForm getCurrentTime={this.getCurrentTime.bind(this)} postComment={this.props.postComment} videoId={this.props.match.params.id} />
         </div>
         <div className="comments">
-          <CommentList comments={this.props.watch.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.timeFormat} />
+          <CommentList comments={this.props.watch.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.state.timeFormat} />
         </div>
       </div>
     );
@@ -93,11 +93,11 @@ export default class Player extends React.Component {
 
     const duration = this.getDuration();
     if (duration >= 36000) {
-      this.timeFormat = 'HH:mm:ss';
+      this.setState({ timeFormat: 'HH:mm:ss' });
     } else if (duration >= 3600) {
-      this.timeFormat = 'H:mm:ss';
+      this.setState({ timeFormat: 'H:mm:ss' });
     } else {
-      this.timeFormat = 'mm:ss';
+      this.setState({ timeFormat: 'mm:ss' });
     }
 
     this.playerControl.current.initialize();

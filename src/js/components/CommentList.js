@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import 'moment-duration-format';
 
 import CommentItem from './CommentItem';
+import convertDuration from '@/utility/convertDuration';
 
 export default class CommentList extends React.Component {
   constructor(props) {
@@ -55,9 +54,9 @@ export default class CommentList extends React.Component {
    * コメントリストのスクロール位置を設定
    */
   setScrollTop() {
-    const formattedCurrentTime = moment.duration(this.currentTime, 'seconds').format(this.props.timeFormat, { trim: false });
-
+    const formattedCurrentTime = convertDuration.durationToFormat(this.currentTime, this.props.timeFormat);
     const comments = this.list.current.querySelectorAll(`[data-current-time="${formattedCurrentTime}"]`);
+
     if (comments.length > 0) {
       const currentItem = comments[comments.length - 1];
       this.list.current.scrollTop = currentItem.offsetTop + currentItem.offsetHeight - this.list.current.offsetHeight;

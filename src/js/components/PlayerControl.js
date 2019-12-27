@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import 'moment-duration-format';
 
 import debounce from '@/utility/debounce';
+import convertDuration from '@/utility/convertDuration';
 
 export default class PlayerControl extends React.Component {
   constructor(props) {
@@ -199,9 +198,10 @@ export default class PlayerControl extends React.Component {
    */
   setStateCurrentTime() {
     const currentTime = this.state.isSeekDragging ? this.state.seekDraggingValue : this.props.getCurrentTime();
+    const formattedCurrentTime = convertDuration.durationToFormat(currentTime, this.props.timeFormat);
 
     this.setState({
-      currentTime: moment.duration(currentTime, 'seconds').format(this.props.timeFormat, { trim: false })
+      currentTime: formattedCurrentTime
     });
 
     this.setStateCurrentTimeFrame = requestAnimationFrame(this.setStateCurrentTime.bind(this));
@@ -213,8 +213,8 @@ export default class PlayerControl extends React.Component {
    */
   setStateDurationOnce() {
     this.setState({
-      currentTime: moment.duration(0, 'seconds').format(this.props.timeFormat, { trim: false }),
-      duration: moment.duration(this.props.getDuration(), 'seconds').format(this.props.timeFormat, { trim: false })
+      currentTime: convertDuration.durationToFormat(0, this.props.timeFormat),
+      duration: convertDuration.durationToFormat(this.props.getDuration(), this.props.timeFormat)
     });
   }
 

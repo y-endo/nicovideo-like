@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import 'moment-duration-format';
 import uuidv4 from 'uuid/v4';
 
 import { firebase } from '@/api/firebase';
 import FirestoreManager from '@/utility/FirestoreManager';
+import convertDuration from '@/utility/convertDuration';
 
 export default class CommentForm extends React.Component {
   constructor(props) {
@@ -37,7 +36,7 @@ export default class CommentForm extends React.Component {
       const commentData = {
         id: uuidv4(),
         value,
-        currentTime: moment.duration(currentTime, 'seconds').format('HH:mm:ss', { trim: false })
+        currentTime: convertDuration.durationToFormat(currentTime, 'HH:mm:ss')
       };
 
       this.props.postComment(commentData);

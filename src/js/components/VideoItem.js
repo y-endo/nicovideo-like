@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 export default class VideoItem extends React.Component {
@@ -14,7 +14,7 @@ export default class VideoItem extends React.Component {
           <div className="video-item__meta">
             <p className="video-item__title">{this.props.title}</p>
             <p className="video-item__channel-name">{this.props.channelName}</p>
-            <p className="video-item__date">{moment(this.props.publishedAt).format('YYYY/MM/DD')}</p>
+            <p className="video-item__date">{format(new Date(this.props.publishedAt), 'yyyy/MM/dd')}</p>
           </div>
         </Link>
       </div>
