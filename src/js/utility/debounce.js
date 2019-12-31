@@ -1,4 +1,4 @@
-export default function(fn, interval) {
+export default function debounce(fn, interval) {
   let timerId;
 
   return () => {

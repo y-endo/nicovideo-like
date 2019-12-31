@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "stylelint": "stylelint --fix ./src/**/*.scss",
+    "stylelint": "stylelint --fix ./src/scss/**/*.scss",
     "serve": "NODE_ENV=development webpack-dev-server --config ./webpack.config.js",
-    "develop": "npm run serve & onchange './src/**/*.scss' -- npm run stylelint & gulp",
+    "develop": "npm run serve & onchange './src/scss/**/*.scss' -- npm run stylelint & gulp",
     "build": "NODE_ENV=production webpack --colors --config ./webpack.config.js"
   },
   "repository": "https://github.com/y-endo/nicovideo-like.git",
@@ -32,20 +32,21 @@
     "stylelint-scss": "^3.13.0",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
-    "whatwg-fetch": "^3.0.0"
+    "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
     "core-js": "^3.6.0",
     "date-fns": "^2.8.1",
     "firebase": "^7.6.1",
     "gsap": "^3.0.4",
-    "query-string": "^6.9.0",
+    "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "redux": "^4.0.4"
+    "redux": "^4.0.4",
+    "uuid": "^3.3.3",
+    "whatwg-fetch": "^3.0.0"
   }
 }

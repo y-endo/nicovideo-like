@@ -3,6 +3,6 @@
  * @param {Number} min 最小値
  * @param {Number} max 最大値
  */
-export default function(min, max) {
+export default function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }

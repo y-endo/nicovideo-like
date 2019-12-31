@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
-export default class Pagination extends React.Component {
+class Pagination extends React.Component {
   render() {
-    const canPrev = this.props.top.searchResultData.prevPageToken !== void 0;
-    const canNext = this.props.top.searchResultData.nextPageToken !== void 0 && this.props.top.searchResultData.items.length >= 40;
+    const canPrev = this.props.search.result.prevPageToken !== void 0;
+    const canNext = this.props.search.result.nextPageToken !== void 0 && this.props.search.result.items.length >= 40;
 
     return (
       <div className="pagination">
@@ -24,15 +25,15 @@ export default class Pagination extends React.Component {
 
   /**
    * クリックイベント
-   * @param {Event} e イベントオブジェクト
+   * @param {Event} event イベントオブジェクト
    */
-  handleClick(e) {
-    e.preventDefault();
+  handleClick(event) {
+    event.preventDefault();
 
-    if (e.currentTarget.classList.contains('pagination__link-prev')) {
-      this.movePage(this.props.top.searchResultData.prevPageToken);
+    if (event.currentTarget.classList.contains('pagination__link-prev')) {
+      this.movePage(this.props.search.result.prevPageToken);
     } else {
-      this.movePage(this.props.top.searchResultData.nextPageToken);
+      this.movePage(this.props.search.result.nextPageToken);
     }
   }
 
@@ -41,11 +42,14 @@ export default class Pagination extends React.Component {
    * @param {String} pageToken YouTubeAPIのpageToken
    */
   movePage(pageToken) {
-    window.location.search = `query=${this.props.top.searchQuery}&pageToken=${pageToken}`;
+    this.props.history.push(`/search/${this.props.search.query}/${pageToken}`);
   }
 }
 
 Pagination.propTypes = {
-  top: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  search: PropTypes.object.isRequired,
   searchVideo: PropTypes.func.isRequired
 };
+
+export default withRouter(Pagination);

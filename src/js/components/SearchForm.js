@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
-import searchVideo from '@/utility/searchVideo';
+import fetchYouTubeSearch from '@/utility/fetchYouTubeSearch';
 
-export default class SearchForm extends React.Component {
+class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.input = React.createRef();
@@ -20,25 +20,41 @@ export default class SearchForm extends React.Component {
   }
 
   componentDidMount() {
-    const locationQuery = queryString.parse(this.props.location.search);
+    const searchQuery = this.props.match.params.query;
+    const pageToken = this.props.match.params.pageToken || '';
 
-    if (locationQuery.query && locationQuery.query !== '') {
-      this.input.current.value = locationQuery.query;
-      this.searchVideo(locationQuery.query, locationQuery.pageToken || '');
+    // URLに検索クエリが含まれている場合は検索を実行する。
+    if (searchQuery && searchQuery !== '') {
+      this.input.current.value = searchQuery;
+      this.search(searchQuery, pageToken);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // URLのqueryかpageTokenが変わったらデータ更新
+    if (prevProps.match.params.query !== this.props.match.params.query || prevProps.match.params.pageToken !== this.props.match.params.pageToken) {
+      const searchQuery = this.props.match.params.query;
+      const pageToken = this.props.match.params.pageToken || '';
+
+      // URLに検索クエリが含まれている場合は検索を実行する。
+      if (searchQuery && searchQuery !== '') {
+        this.input.current.value = searchQuery;
+        this.search(searchQuery, pageToken);
+      }
     }
   }
 
   /**
    * 検索のサブミットイベント
-   * @param {Event} e イベントオブジェクト
+   * @param {Event} event イベントオブジェクト
    */
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit(event) {
+    event.preventDefault();
 
     const value = this.input.current.value;
 
     if (value === '') return;
-    window.location.search = `query=${value}`;
+    this.props.history.push(`/search/${value}`);
   }
 
   /**
@@ -46,19 +62,22 @@ export default class SearchForm extends React.Component {
    * @param {String} value 検索する文言
    * @param {String} pageToken YouTubeAPIのpageToken
    */
-  async searchVideo(value, pageToken = '') {
-    const data = await searchVideo(value, pageToken).then(json => json);
+  async search(value, pageToken = '') {
+    const result = await fetchYouTubeSearch(value, pageToken).then(json => json);
 
-    if (data.error) return;
+    if (result.error) return;
 
     this.props.searchVideo({
       query: value,
-      data
+      result
     });
   }
 }
 
 SearchForm.propTypes = {
-  searchVideo: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  searchVideo: PropTypes.func.isRequired
 };
+
+export default withRouter(SearchForm);

@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import VideoItem from './VideoItem';
-import Pagination from './Pagination';
+import Pagination from '@/containers/Pagination';
 
 export default class SearchResult extends React.Component {
   render() {
     let videoItems;
 
-    videoItems = this.props.top.searchResultData.items.map(data => {
+    videoItems = this.props.search.result.items.map(data => {
       return (
         <VideoItem
           key={data.id.videoId}
@@ -24,12 +24,12 @@ export default class SearchResult extends React.Component {
     return (
       <section className="search-result">
         <div className="videos-container">{videoItems}</div>
-        <Pagination {...this.props} />
+        <Pagination />
       </section>
     );
   }
 }
 
 SearchResult.propTypes = {
-  top: PropTypes.object.isRequired
+  search: PropTypes.object.isRequired
 };

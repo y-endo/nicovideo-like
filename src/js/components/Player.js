@@ -27,7 +27,7 @@ export default class Player extends React.Component {
       <div className="player-container">
         <div className="player-area">
           <div className="player-wrap">
-            <CommentCanvas ref={this.commentCanvas} getCurrentTime={this.getCurrentTime.bind(this)} comments={this.props.watch.comments} />
+            <CommentCanvas ref={this.commentCanvas} getCurrentTime={this.getCurrentTime.bind(this)} comments={this.props.player.comments} />
             <div id="player"></div>
           </div>
           <PlayerControl
@@ -46,7 +46,7 @@ export default class Player extends React.Component {
           <CommentForm getCurrentTime={this.getCurrentTime.bind(this)} postComment={this.props.postComment} videoId={this.props.match.params.id} />
         </div>
         <div className="comments">
-          <CommentList comments={this.props.watch.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.state.timeFormat} />
+          <CommentList comments={this.props.player.comments} getCurrentTime={this.getCurrentTime.bind(this)} timeFormat={this.state.timeFormat} />
         </div>
       </div>
     );
@@ -219,7 +219,7 @@ export default class Player extends React.Component {
 
 Player.propTypes = {
   match: PropTypes.object.isRequired,
+  player: PropTypes.object.isRequired,
   postComment: PropTypes.func.isRequired,
-  loadComments: PropTypes.func.isRequired,
-  watch: PropTypes.object.isRequired
+  loadComments: PropTypes.func.isRequired
 };

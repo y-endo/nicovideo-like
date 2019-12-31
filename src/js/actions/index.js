@@ -5,7 +5,7 @@ export function searchVideo(value) {
     type: types.SEARCH_VIDEO,
     payload: {
       query: value.query,
-      data: value.data
+      result: value.result
     }
   };
 }

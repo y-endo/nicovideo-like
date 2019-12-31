@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  background: #222;
+
+  &__link {
+    display: inline-block;
+  }
+
+  &__title {
+    color: #fff;
+    font-size: 2rem;
+  }
+}

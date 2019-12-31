@@ -2,9 +2,9 @@ import { combineReducers } from 'redux';
 import * as types from '@/constants/ActionTypes';
 
 const initialState = {
-  top: {
-    searchQuery: '',
-    searchResultData: {
+  search: {
+    query: '',
+    result: {
       kind: undefined,
       etag: undefined,
       nextPageToken: undefined,
@@ -16,21 +16,22 @@ const initialState = {
       items: []
     }
   },
-  watch: {
+  player: {
     comments: []
-  }
+  },
+  ui: {}
 };
 
-function topReducer(state = initialState.top, action) {
+function searchReducer(state = initialState.search, action) {
   switch (action.type) {
     case types.SEARCH_VIDEO:
-      return { ...state, searchQuery: action.payload.query, searchResultData: action.payload.data };
+      return { ...state, query: action.payload.query, result: action.payload.result };
     default:
       return state;
   }
 }
 
-function watchReducer(state = initialState.watch, action) {
+function playerReducer(state = initialState.player, action) {
   switch (action.type) {
     case types.LOAD_COMMENTS:
       return { ...state, comments: action.payload.comments };
@@ -42,6 +43,6 @@ function watchReducer(state = initialState.watch, action) {
 }
 
 export default combineReducers({
-  top: topReducer,
-  watch: watchReducer
+  search: searchReducer,
+  player: playerReducer
 });

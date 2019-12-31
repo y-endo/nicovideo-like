@@ -3,7 +3,7 @@ const gulpSass = require('gulp-sass');
 const gulpAutoPrefixer = require('gulp-autoprefixer');
 const paths = {
   scss: {
-    src: ['./src/scss/**/*.scss', '!./src/scss/**/_*.scss'],
+    src: ['./src/scss/**/*.scss'],
     dest: './public/assets/css'
   }
 };

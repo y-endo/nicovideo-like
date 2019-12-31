@@ -23,10 +23,10 @@ export default class CommentForm extends React.Component {
 
   /**
    * サブミットイベント
-   * @param {Event} e イベントオブジェクト
+   * @param {Event} event イベントオブジェクト
    */
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit(event) {
+    event.preventDefault();
 
     const value = this.input.current.value;
     let currentTime = this.props.getCurrentTime();
