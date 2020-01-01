@@ -42,6 +42,7 @@ class Pagination extends React.Component {
    * @param {String} pageToken YouTubeAPIのpageToken
    */
   movePage(pageToken) {
+    window.scrollTo(0, 0);
     this.props.history.push(`/search/${this.props.search.query}/${pageToken}`);
   }
 }

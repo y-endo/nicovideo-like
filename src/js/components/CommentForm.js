@@ -40,7 +40,8 @@ export default class CommentForm extends React.Component {
       };
 
       this.props.postComment(commentData);
-      FirestoreManager.addData(this.props.videoId, {
+      FirestoreManager.addData('comments', this.props.videoId, {
+        commentCounter: firebase.firestore.FieldValue.increment(1),
         comments: firebase.firestore.FieldValue.arrayUnion(commentData)
       });
       this.input.current.value = null;

@@ -76,7 +76,8 @@ export default class Player extends React.Component {
     });
 
     // 動画のコメントデータを取得する
-    FirestoreManager.getData(this.props.match.params.id).then(data => {
+    FirestoreManager.getDocument('comments', this.props.match.params.id).then(document => {
+      const data = document.data();
       if (data && data.comments) this.props.loadComments(data.comments);
     });
   }

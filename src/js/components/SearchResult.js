@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import VideoItem from './VideoItem';
+import Loader from '@/components/Loader';
 import Pagination from '@/containers/Pagination';
 
 export default class SearchResult extends React.Component {
@@ -23,6 +24,7 @@ export default class SearchResult extends React.Component {
 
     return (
       <section className="search-result">
+        {this.props.search.isLoading && <Loader />}
         <div className="videos-container">{videoItems}</div>
         <Pagination />
       </section>

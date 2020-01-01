@@ -1,5 +1,12 @@
 import * as types from '@/constants/ActionTypes';
 
+export function setIsSearchLoading(value) {
+  return {
+    type: types.SET_IS_SEARCH_LOADING,
+    payload: value
+  };
+}
+
 export function searchVideo(value) {
   return {
     type: types.SEARCH_VIDEO,
@@ -13,17 +20,13 @@ export function searchVideo(value) {
 export function loadComments(value) {
   return {
     type: types.LOAD_COMMENTS,
-    payload: {
-      comments: value
-    }
+    payload: value
   };
 }
 
 export function postComment(value) {
   return {
     type: types.POST_COMMENT,
-    payload: {
-      comment: value
-    }
+    payload: value
   };
 }

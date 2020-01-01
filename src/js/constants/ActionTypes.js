@@ -1,3 +1,4 @@
+export const SET_IS_SEARCH_LOADING = 'SET_IS_SEARCH_LOADING';
 export const SEARCH_VIDEO = 'SEARCH_VIDEO';
 export const LOAD_COMMENTS = 'LOAD_COMMENTS';
 export const POST_COMMENT = 'POST_COMMENT';

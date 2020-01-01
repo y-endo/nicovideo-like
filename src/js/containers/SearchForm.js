@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { searchVideo } from '@/actions';
+import { setIsSearchLoading, searchVideo } from '@/actions';
 
 import SearchForm from '@/components/SearchForm';
 
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setIsSearchLoading: value => dispatch(setIsSearchLoading(value)),
     searchVideo: value => dispatch(searchVideo(value))
   };
 };

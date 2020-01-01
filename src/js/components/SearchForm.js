@@ -63,7 +63,9 @@ class SearchForm extends React.Component {
    * @param {String} pageToken YouTubeAPIのpageToken
    */
   async search(value, pageToken = '') {
+    this.props.setIsSearchLoading(true);
     const result = await fetchYouTubeSearch(value, pageToken).then(json => json);
+    this.props.setIsSearchLoading(false);
 
     if (result.error) return;
 
@@ -77,6 +79,7 @@ class SearchForm extends React.Component {
 SearchForm.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
+  setIsSearchLoading: PropTypes.func.isRequired,
   searchVideo: PropTypes.func.isRequired
 };
 

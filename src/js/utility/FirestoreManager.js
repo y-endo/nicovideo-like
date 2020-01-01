@@ -2,21 +2,61 @@ import { firestore } from '@/api/firebase';
 
 class FirestoreManager {
   constructor() {
-    this.isAdding = false;
+    this.isProcessing = false;
   }
 
   /**
-   * データ取得
+   * 単体ドキュメント取得
+   * @param {String} collection コレクション名
    * @param {String} id ドキュメントID
    */
-  getData(id) {
+  getDocument(collection, id) {
     return new Promise((resolve, reject) => {
       firestore
-        .collection('comments')
+        .collection(collection)
         .doc(id)
         .get()
         .then(document => {
-          resolve(document.data());
+          resolve(document);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * 複数ドキュメント取得
+   * @param {String} collection コレクション名
+   * @param {Object} options 検索オプション
+   */
+  getDocuments(collection, options = {}) {
+    return new Promise((resolve, reject) => {
+      const documents = [];
+      let collectionRef = firestore.collection(collection);
+
+      if (options.where) {
+        options.where.forEach(where => {
+          collectionRef = collectionRef.where(where.key, where.operator, where.value);
+        });
+      }
+
+      if (options.orderBy) {
+        collectionRef = collectionRef.orderBy(options.orderBy.key, options.orderBy.order);
+      }
+
+      if (options.limit) {
+        collectionRef = collectionRef.limit(options.limit);
+      }
+
+      collectionRef
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(document => {
+            documents.push(document);
+          });
+
+          resolve(documents);
         })
         .catch(error => {
           reject(error);
@@ -26,24 +66,25 @@ class FirestoreManager {
 
   /**
    * データの追加
+   * @param {String} collection コレクション名
    * @param {String} id ドキュメントID
    * @param {Object} data 追加データ
    */
-  addData(id, data) {
-    if (this.isAdding) return;
-    this.isAdding = true;
+  addData(collection, id, data) {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
 
     return new Promise((resolve, reject) => {
       firestore
-        .collection('comments')
+        .collection(collection)
         .doc(id)
         .set(data, { merge: true })
         .then(result => {
-          this.isAdding = false;
+          this.isProcessing = false;
           resolve(result);
         })
         .catch(error => {
-          this.isAdding = false;
+          this.isProcessing = false;
           reject(error);
         });
     });

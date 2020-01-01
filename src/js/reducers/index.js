@@ -14,7 +14,8 @@ const initialState = {
         resultsPerPage: undefined
       },
       items: []
-    }
+    },
+    isLoading: false
   },
   player: {
     comments: []
@@ -24,6 +25,8 @@ const initialState = {
 
 function searchReducer(state = initialState.search, action) {
   switch (action.type) {
+    case types.SET_IS_SEARCH_LOADING:
+      return { ...state, isLoading: action.payload };
     case types.SEARCH_VIDEO:
       return { ...state, query: action.payload.query, result: action.payload.result };
     default:
@@ -34,9 +37,9 @@ function searchReducer(state = initialState.search, action) {
 function playerReducer(state = initialState.player, action) {
   switch (action.type) {
     case types.LOAD_COMMENTS:
-      return { ...state, comments: action.payload.comments };
+      return { ...state, comments: action.payload };
     case types.POST_COMMENT:
-      return { ...state, comments: state.comments.concat(action.payload.comment) };
+      return { ...state, comments: state.comments.concat(action.payload) };
     default:
       return state;
   }
