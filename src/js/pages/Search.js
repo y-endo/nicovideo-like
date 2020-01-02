@@ -7,16 +7,14 @@ import SearchResult from '@/containers/SearchResult';
 
 export default class Search extends React.Component {
   render() {
-    return (
-      <Layout
-        page={
-          <section className="content">
-            <SearchForm />
-            <SearchResult />
-          </section>
-        }
-      />
+    const content = (
+      <section className="content">
+        <SearchForm />
+        <SearchResult />
+      </section>
     );
+
+    return <Layout content={content} />;
   }
 }
 

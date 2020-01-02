@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.video-item {
+  line-height: 1.4;
+
+  &__link {
+    display: block;
+  }
+
+  &__thumb {
+    overflow: hidden;
+  }
+
+  &__thumb-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__meta {
+    margin: 0 12px;
+
+    @include sp {
+      margin: 0 5px;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+
+    @include sp {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__channel-name {
+    color: #444;
+    font-size: 1.3rem;
+
+    @include sp {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__date {
+    margin-top: 5px;
+    color: #444;
+    font-size: 1.3rem;
+
+    @include sp {
+      font-size: 1.2rem;
+    }
+  }
+}

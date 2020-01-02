@@ -23,6 +23,11 @@
     transform: translateZ(0);
     animation: loading 1s infinite linear;
     content: '';
+
+    @include sp {
+      transform: scale(0.5);
+      transform-origin: top center;
+    }
   }
 }
 @keyframes loading {

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+@mixin flex-box($column) {
+  $width: 100 / $column;
+  // 4カラムなら間に3つマージンができるから20px * 3で60px、マージンを分割したwidth(60/4 = 15 = 100% - 15)にする
+  $widthAdjust: (($column - 1) * 20) / $column;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 30px auto 0;
+
+  @include sp {
+    margin: 15px auto 0;
+  }
+
+  &__item {
+    /* stylelint-disable */
+    flex: 0 0 calc(#{$width}% - #{$widthAdjust}px);
+    width: calc(#{$width}% - #{$widthAdjust}px);
+    /* stylelint-enable */
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+    &:nth-child(#{$column}n) {
+      margin-right: 0;
+    }
+  }
+}
+
+.flex-box-2col-sp {
+  @include sp {
+    @include flex-box(2);
+  }
+}
+
+.flex-box-4col-pc {
+  @include pc {
+    @include flex-box(4);
+  }
+}

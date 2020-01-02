@@ -18,14 +18,17 @@ export default class SearchResult extends React.Component {
           thumbnail={data.snippet.thumbnails.high.url}
           channelName={data.snippet.channelTitle}
           publishedAt={data.snippet.publishedAt}
+          className={'flex-box-4col-pc__item flex-box-2col-sp__item'}
         />
       );
     });
 
     return (
       <section className="search-result">
-        {this.props.search.isLoading && <Loader />}
-        <div className="videos-container">{videoItems}</div>
+        <div className="videos-container">
+          {this.props.search.isLoading && <Loader />}
+          <div className="flex-box-4col-pc flex-box-2col-sp">{videoItems}</div>
+        </div>
         <Pagination />
       </section>
     );

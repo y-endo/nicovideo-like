@@ -14,5 +14,9 @@
   &__title {
     color: #fff;
     font-size: 2rem;
+
+    @include sp {
+      font-size: 1.8rem;
+    }
   }
 }

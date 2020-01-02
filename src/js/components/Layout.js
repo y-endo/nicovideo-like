@@ -13,7 +13,7 @@ export default class Layout extends React.Component {
     return (
       <>
         <Header />
-        <main className="main">{this.props.page}</main>
+        <main className="main">{this.props.content}</main>
         <SvgSymbol />
       </>
     );
@@ -21,5 +21,5 @@ export default class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  page: PropTypes.element.isRequired
+  content: PropTypes.element.isRequired
 };

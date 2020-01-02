@@ -7,16 +7,14 @@ import Player from '@/containers/Player';
 
 export default class Watch extends React.Component {
   render() {
-    return (
-      <Layout
-        page={
-          <section className="content">
-            <SearchForm />
-            <Player {...this.props} />
-          </section>
-        }
-      />
+    const content = (
+      <section className="content">
+        <SearchForm />
+        <Player {...this.props} />
+      </section>
     );
+
+    return <Layout content={content} />;
   }
 }
 

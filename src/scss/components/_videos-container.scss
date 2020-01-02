@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+.videos-container {
+  position: relative;
+  margin: 30px auto 0;
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.8rem;
+
+    @include sp {
+      font-size: 1.6rem;
+    }
+  }
+}

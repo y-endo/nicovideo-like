@@ -126,7 +126,7 @@ export default class CommentCanvas extends React.Component {
     this.fontSize = this.rowHeight * getCanvasLineHeight;
 
     this.canvasContext = this.canvas.current.getContext('2d');
-    this.canvasContext.font = `bold ${this.fontSize}px Meiryo, メイリオ`;
+    this.canvasContext.font = `bold ${this.fontSize}px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3'`;
     this.canvasContext.fillStyle = '#fff';
   }
 

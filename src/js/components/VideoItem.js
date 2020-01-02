@@ -5,8 +5,14 @@ import { Link } from 'react-router-dom';
 
 export default class VideoItem extends React.Component {
   render() {
+    let className = 'video-item';
+
+    if (this.props.className && this.props.className !== '') {
+      className += ' ' + this.props.className;
+    }
+
     return (
-      <div className="video-item">
+      <div className={className}>
         <Link to={`/watch/${this.props.id}`} className="video-item__link">
           <div className="video-item__thumb">
             <img src={this.props.thumbnail} alt="" className="video-item__thumb-image" />
@@ -27,5 +33,6 @@ VideoItem.propTypes = {
   title: PropTypes.string.isRequired,
   thumbnail: PropTypes.string.isRequired,
   channelName: PropTypes.string.isRequired,
-  publishedAt: PropTypes.string.isRequired
+  publishedAt: PropTypes.string.isRequired,
+  className: PropTypes.string
 };

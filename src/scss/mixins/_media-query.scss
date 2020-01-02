@@ -1,0 +1,13 @@
+@charset 'UTF-8';
+
+@mixin pc {
+  @media screen and (min-width: 801px) {
+    @content;
+  }
+}
+
+@mixin sp {
+  @media screen and (max-width: 800px) {
+    @content;
+  }
+}

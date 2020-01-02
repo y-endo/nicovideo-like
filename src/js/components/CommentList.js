@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CommentItem from './CommentItem';
+import CommentListItem from './CommentListItem';
 import convertDuration from '@/utility/convertDuration';
 
 export default class CommentList extends React.Component {
@@ -17,12 +17,12 @@ export default class CommentList extends React.Component {
       if (a.currentTime < b.currentTime) return -1;
       return 0;
     });
-    const commentItems = this.props.comments.map((data, index) => {
-      return <CommentItem data={data} key={index} timeFormat={this.props.timeFormat} />;
+    const commentListItems = this.props.comments.map((data, index) => {
+      return <CommentListItem data={data} key={index} timeFormat={this.props.timeFormat} />;
     });
     return (
       <ul ref={this.list} className="comment-list">
-        {commentItems}
+        {commentListItems}
       </ul>
     );
   }

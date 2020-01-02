@@ -5,6 +5,7 @@
   justify-content: center;
 
   &__input {
+    flex: 0 0 500px;
     box-sizing: border-box;
     width: 500px;
     height: 60px;
@@ -12,9 +13,18 @@
     font-size: 2.3rem;
     line-height: 60px;
     border: solid 1px #ddd;
+
+    @include sp {
+      flex: 1;
+      width: auto;
+      height: 40px;
+      font-size: 1.8rem;
+      line-height: 40px;
+    }
   }
 
   &__button {
+    flex: 0 0 120px;
     box-sizing: border-box;
     width: 120px;
     height: 60px;
@@ -22,5 +32,12 @@
     background: transparent;
     border: solid 1px #ddd;
     border-left: none;
+
+    @include sp {
+      flex: 0 0 100px;
+      width: 100px;
+      height: 40px;
+      font-size: 1.5rem;
+    }
   }
 }

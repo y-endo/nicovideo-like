@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+.pagination {
+  display: flex;
+  justify-content: center;
+
+  &__link {
+    display: block;
+    width: 200px;
+    height: 50px;
+    margin: 0 20px;
+    line-height: 50px;
+    text-align: center;
+    border: solid 1px #ddd;
+  }
+}

@@ -2,6 +2,10 @@ import { combineReducers } from 'redux';
 import * as types from '@/constants/ActionTypes';
 
 const initialState = {
+  pickedVideos: {
+    isLoaded: false,
+    videoWithComments: []
+  },
   search: {
     query: '',
     result: {
@@ -19,13 +23,23 @@ const initialState = {
   },
   player: {
     comments: []
-  },
-  ui: {}
+  }
 };
+
+function pickedVideosReducer(state = initialState.pickedVideos, action) {
+  switch (action.type) {
+    case types.SET_PICKED_IS_LOADED:
+      return { ...state, isLoaded: action.payload };
+    case types.LOAD_VIDEO_WITH_COMMENTS:
+      return { ...state, videoWithComments: action.payload };
+    default:
+      return state;
+  }
+}
 
 function searchReducer(state = initialState.search, action) {
   switch (action.type) {
-    case types.SET_IS_SEARCH_LOADING:
+    case types.SET_SEARCH_IS_LOADING:
       return { ...state, isLoading: action.payload };
     case types.SEARCH_VIDEO:
       return { ...state, query: action.payload.query, result: action.payload.result };
@@ -46,6 +60,7 @@ function playerReducer(state = initialState.player, action) {
 }
 
 export default combineReducers({
+  pickedVideos: pickedVideosReducer,
   search: searchReducer,
   player: playerReducer
 });

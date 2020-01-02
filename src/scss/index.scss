@@ -1,32 +1,17 @@
 @charset "UTF-8";
 
-@import 'reset';
+@import './mixins/media-query';
 
-html {
-  font-size: 10px;
-}
-
-body {
-  font-size: 1.6rem;
-  line-height: 1.6;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-p {
-  margin-top: 10px;
-}
-
-.svg-symbol {
-  display: none;
-}
+@import './reset';
+@import './base';
 
 @import './components/header';
-@import './components/pages';
+@import './components/content';
+@import './components/svg-symbol';
 @import './components/loader';
 @import './components/search-form';
-@import './components/search-result';
+@import './components/videos-container';
+@import './components/flex-box';
+@import './components/video-item';
+@import './components/pagination';
 @import './components/player';

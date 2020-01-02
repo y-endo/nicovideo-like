@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+html {
+  font-size: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3',
+    Arial, メイリオ, Meiryo, sans-serif;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.6;
+
+  @include sp {
+    font-size: 1.4rem;
+    line-height: 1.5;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin-top: 10px;
+
+  @include sp {
+    margin-top: 5px;
+  }
+}
+
+input,
+button {
+  -webkit-appearance: none;
+  border-radius: 0;
+  background: transparent;
+  margin: 0;
+}
+
+input[type='range'] {
+  outline: none;
+
+  &::-webkit-slider-runnable-track {
+    outline: none;
+  }
+
+  &::-webkit-slider-thumb,
+  &::-webkit-media-slider-thumb {
+    outline: none;
+  }
+}

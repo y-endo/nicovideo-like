@@ -4,5 +4,8 @@
   max-width: 1400px;
   margin: auto;
   padding: 40px 20px;
-  font-size: 1.6rem;
+
+  @include sp {
+    padding: 30px 15px;
+  }
 }
