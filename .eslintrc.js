@@ -5,18 +5,24 @@ module.exports = {
     node: true,
     es6: true
   },
-  globals: {
-    YT: true
-  },
   plugins: ['prettier', 'eslint-plugin-prettier'],
-  extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:react/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:prettier/recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/eslint-recommended'
+  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: 'babel-eslint',
     sourceType: 'module',
-    ecmaVersion: 2018
+    ecmaVersion: 2018,
+    ecmaFeatures: {
+      jsx: true
+    }
   },
   rules: {
-    'no-console': 1,
-    'no-var': 2
+    'no-var': 2,
+    'react/prop-types': 0
   }
 };

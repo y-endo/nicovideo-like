@@ -5,7 +5,7 @@
   "scripts": {
     "stylelint": "stylelint --fix ./src/scss/**/*.scss",
     "serve": "NODE_ENV=development webpack-dev-server --config ./webpack.config.js",
-    "develop": "npm run serve & onchange './src/scss/**/*.scss' -- npm run stylelint & gulp",
+    "dev": "npm run serve & onchange './src/scss/**/*.scss' -- npm run stylelint & gulp",
     "build": "NODE_ENV=production webpack --colors --config ./webpack.config.js"
   },
   "repository": "https://github.com/y-endo/nicovideo-like.git",
@@ -15,6 +15,13 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.6",
+    "@types/react-router-dom": "^5.1.3",
+    "@types/uuid": "^3.4.6",
+    "@types/youtube": "^0.0.38",
     "babel-loader": "^8.0.6",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
@@ -30,6 +37,7 @@
     "stylelint-config-standard": "^19.0.0",
     "stylelint-order": "^3.1.1",
     "stylelint-scss": "^3.13.0",
+    "typescript": "^3.7.5",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.10.1"
@@ -46,6 +54,8 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
+    "typescript-fsa": "^3.0.0",
+    "typescript-fsa-reducers": "^1.2.1",
     "uuid": "^3.3.3",
     "whatwg-fetch": "^3.0.0"
   }
