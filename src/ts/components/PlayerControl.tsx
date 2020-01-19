@@ -36,7 +36,7 @@ const PlayerControl: React.RefForwardingComponent<PlayerControlHandlers, Props> 
   const [isMuted, setIsMuted] = React.useState<boolean>(false);
   const [seekDraggingValue, setSeekDraggingValue] = React.useState<number>(0);
   const [isSeekDragging, setIsSeekDragging] = React.useState<boolean>(false);
-  let setStateCurrentTimeFrame = 0;
+  const setStateCurrentTimeFrame = React.useRef<number>(0);
 
   /**
    * componentDidMount
@@ -48,7 +48,7 @@ const PlayerControl: React.RefForwardingComponent<PlayerControlHandlers, Props> 
      * componentWillUnmount
      */
     return () => {
-      cancelAnimationFrame(setStateCurrentTimeFrame);
+      cancelAnimationFrame(setStateCurrentTimeFrame.current);
     };
   }, []);
 
@@ -78,16 +78,14 @@ const PlayerControl: React.RefForwardingComponent<PlayerControlHandlers, Props> 
    * 10秒巻き戻すのクリックイベント
    */
   const handleRewindClick = () => {
-    const currentTime = props.getCurrentTime();
-    props.seekTo(currentTime - 10, true);
+    props.seekTo(props.getCurrentTime() - 10, true);
   };
 
   /**
    * 10秒進むのクリックイベント
    */
   const handleSkipClick = () => {
-    const currentTime = props.getCurrentTime();
-    props.seekTo(currentTime + 10, true);
+    props.seekTo(props.getCurrentTime() + 10, true);
   };
 
   /**
@@ -149,12 +147,12 @@ const PlayerControl: React.RefForwardingComponent<PlayerControlHandlers, Props> 
    * ローカルステートのcurrentTimeを設定
    */
   const setStateCurrentTime = () => {
-    const currentTime = isSeekDragging ? seekDraggingValue : props.getCurrentTime();
-    const formattedCurrentTime = convertDuration.durationToFormat(currentTime, props.timeFormat);
+    const time = isSeekDragging ? seekDraggingValue : props.getCurrentTime();
+    const formattedCurrentTime = convertDuration.durationToFormat(time, props.timeFormat);
 
     setCurrentTime(formattedCurrentTime);
 
-    setStateCurrentTimeFrame = requestAnimationFrame(setStateCurrentTime);
+    setStateCurrentTimeFrame.current = requestAnimationFrame(setStateCurrentTime);
   };
 
   /**
@@ -248,4 +246,4 @@ const PlayerControl: React.RefForwardingComponent<PlayerControlHandlers, Props> 
   );
 };
 
-export default PlayerControl;
+export default React.forwardRef(PlayerControl);

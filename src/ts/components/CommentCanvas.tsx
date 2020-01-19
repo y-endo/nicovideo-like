@@ -26,11 +26,11 @@ type Props = {
 
 const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> = (props, ref) => {
   const canvas = React.useRef<HTMLCanvasElement>(null);
-  let canvasContext: CanvasRenderingContext2D | null = null;
+  const canvasContext = React.useRef<CanvasRenderingContext2D | null>(null);
+  const timeline = React.useRef<TimelineMax>(new TimelineMax({ paused: true }));
   const commentMaxRow = 20;
-  const timeline = new TimelineMax({ paused: true });
-  let renderCanvasFrame = 0;
-  let rowHeight = 0;
+  const renderCanvasFrame = React.useRef<number>(0);
+  const rowHeight = React.useRef<number>(0);
 
   /**
    * componentDidMount
@@ -45,9 +45,10 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
      * componentWillUnmount
      */
     return () => {
-      timeline.kill();
-      timeline.clear();
-      cancelAnimationFrame(renderCanvasFrame);
+      timeline.current.kill();
+      timeline.current.clear();
+
+      cancelAnimationFrame(renderCanvasFrame.current);
     };
   }, []);
 
@@ -77,21 +78,21 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
    */
   const playTimeline = () => {
     seekTimeline(props.getCurrentTime());
-    timeline.play();
+    timeline.current.play();
   };
 
   /**
    * コメントタイムライン一時停止
    */
   const pauseTimeline = () => {
-    timeline.pause();
+    timeline.current.pause();
   };
 
   /**
    * コメントタイムラインスキップ
    */
   const seekTimeline = (seconds: number) => {
-    timeline.seek(seconds);
+    timeline.current.seek(seconds);
   };
 
   /**
@@ -107,15 +108,15 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
     canvas.current.height = parent.offsetHeight;
 
     // コメントを1行分の高さ
-    rowHeight = canvas.current.height / commentMaxRow;
+    rowHeight.current = canvas.current.height / commentMaxRow;
     // 画面にコメントが10行収まるフォントサイズ
-    const fontSize = rowHeight * getCanvasLineHeight;
+    const fontSize = rowHeight.current * getCanvasLineHeight;
 
-    canvasContext = canvas.current.getContext('2d');
+    canvasContext.current = canvas.current.getContext('2d');
 
-    if (canvasContext !== null) {
-      canvasContext.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3'`;
-      canvasContext.fillStyle = '#fff';
+    if (canvasContext.current !== null) {
+      canvasContext.current.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3'`;
+      canvasContext.current.fillStyle = '#fff';
     }
   };
 
@@ -123,8 +124,8 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
    * Canvasを描画する
    */
   const renderCanvas = () => {
-    if (canvasContext !== null) canvasContext.clearRect(0, 0, canvas.current!.width, canvas.current!.height);
-    renderCanvasFrame = requestAnimationFrame(renderCanvas);
+    if (canvasContext.current !== null) canvasContext.current.clearRect(0, 0, canvas.current!.width, canvas.current!.height);
+    renderCanvasFrame.current = requestAnimationFrame(renderCanvas);
   };
 
   /**
@@ -135,7 +136,7 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
 
     // コメントの1~10行目までの位置
     for (let index = 1; index <= commentMaxRow; index++) {
-      positions.push(rowHeight * index);
+      positions.push(rowHeight.current * index);
     }
 
     // 配列シャッフル
@@ -151,17 +152,19 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
    * コメントのタイムライン作成(TimelineMax)
    */
   const createTimeline = () => {
-    if (canvas === null || canvas.current === null) return;
-    if (canvasContext === null) return;
+    if (canvas.current === null) return;
+    if (canvasContext.current === null) return;
 
     const canvasCurrent = canvas.current;
+    const canvasContextCurrent = canvasContext.current;
 
     const commentPosition: { [key: string]: { positions: number[]; count: number } } = {};
-    timeline.kill();
-    timeline.clear();
+
+    timeline.current.kill();
+    timeline.current.clear();
 
     props.comments.forEach(comment => {
-      const commentWidth = (canvasContext as CanvasRenderingContext2D).measureText(comment.value).width;
+      const commentWidth = canvasContextCurrent.measureText(comment.value).width;
 
       // テキストのY位置、同じ時間に投稿されたコメントはcommentMaxRow行分まで重ならないようにする
       if (commentPosition[comment.currentTime] === void 0)
@@ -178,12 +181,12 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
         y
       };
 
-      timeline.add(
+      timeline.current.add(
         TweenMax.to(text, 3, {
           x: -commentWidth,
           ease: Linear.easeNone,
           onUpdate: () => {
-            (canvasContext as CanvasRenderingContext2D).fillText(comment.value, text.x, text.y);
+            canvasContextCurrent.fillText(comment.value, text.x, text.y);
           }
         }),
         convertDuration.HHmmssToDuration(comment.currentTime)
@@ -203,4 +206,4 @@ const CommentCanvas: React.RefForwardingComponent<CommentCanvasHandlers, Props> 
   return <canvas className="comment-canvas" ref={canvas}></canvas>;
 };
 
-export default CommentCanvas;
+export default React.forwardRef(CommentCanvas);

@@ -18,8 +18,8 @@ type Props = {
 
 const CommentList: React.FC<Props> = props => {
   const list = React.useRef<HTMLUListElement>(null);
-  let lastCurrentTime = 0;
-  let watchCurrentTimeFrame = 0;
+  const lastCurrentTime = React.useRef<number>(0);
+  const watchCurrentTimeFrame = React.useRef<number>(0);
 
   props.comments.sort((a, b) => {
     if (a.currentTime > b.currentTime) return 1;
@@ -41,7 +41,7 @@ const CommentList: React.FC<Props> = props => {
      * componentWillUnmount
      */
     return () => {
-      cancelAnimationFrame(watchCurrentTimeFrame);
+      cancelAnimationFrame(watchCurrentTimeFrame.current);
     };
   }, []);
 
@@ -52,12 +52,12 @@ const CommentList: React.FC<Props> = props => {
     const currentTime = Math.floor(props.getCurrentTime());
 
     // 1秒ごとにコメントリストのスクロール位置を更新する
-    if (lastCurrentTime !== currentTime) {
-      lastCurrentTime = currentTime;
+    if (lastCurrentTime.current !== currentTime) {
+      lastCurrentTime.current = currentTime;
       setScrollTop();
     }
 
-    watchCurrentTimeFrame = requestAnimationFrame(watchCurrentTime);
+    watchCurrentTimeFrame.current = requestAnimationFrame(watchCurrentTime);
   };
 
   /**
@@ -65,7 +65,7 @@ const CommentList: React.FC<Props> = props => {
    */
   const setScrollTop = () => {
     if (list.current === null) return;
-    const formattedCurrentTime = convertDuration.durationToFormat(lastCurrentTime, props.timeFormat);
+    const formattedCurrentTime = convertDuration.durationToFormat(lastCurrentTime.current, props.timeFormat);
     const comments = list.current.querySelectorAll<HTMLElement>(`[data-current-time="${formattedCurrentTime}"]`);
 
     if (comments.length > 0) {

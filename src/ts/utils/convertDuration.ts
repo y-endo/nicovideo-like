@@ -32,9 +32,9 @@ const convertDuration = {
     duration -= 3600 * hours;
     const minutes = Math.floor(duration / 60);
     duration -= 60 * minutes;
+    duration = Math.floor(duration);
 
     const result: { [key: string]: string } = {
-      HHmmss: `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + duration).slice(-2)}`,
       HH: ('0' + hours).slice(-2),
       H: String(hours),
       mm: ('0' + minutes).slice(-2),

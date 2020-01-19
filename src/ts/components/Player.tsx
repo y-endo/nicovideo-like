@@ -24,10 +24,10 @@ type Props = RouteComponentProps<{ id: string }> & {
 
 const Player: React.FC<Props> = props => {
   const [timeFormat, setTimeFormat] = React.useState<string>('mm:ss');
-  const [isReady, setIsReady] = React.useState<boolean>(false);
+  const isReady = React.useRef<boolean>(false);
   const commentCanvas = React.useRef<CommentCanvasHandlers>(null);
   const playerControl = React.useRef<PlayerControlHandlers>(null);
-  let player: YT.Player | null = null;
+  const player = React.useRef<YT.Player | null>(null);
 
   /**
    * componentDidMount
@@ -35,7 +35,7 @@ const Player: React.FC<Props> = props => {
   React.useEffect(() => {
     // YouTubeのiframe作成
     YouTubeIframeAPI.ready().then(() => {
-      player = new YT.Player('player', {
+      player.current = new YT.Player('player', {
         width: '1920',
         height: '1080',
         videoId: props.match.params.id,
@@ -73,7 +73,7 @@ const Player: React.FC<Props> = props => {
    * YouTubeのreadyイベント
    */
   const handlePlayerReady = () => {
-    setIsReady(true);
+    isReady.current = true;
 
     const duration = getDuration();
     if (duration >= 36000) {
@@ -125,27 +125,27 @@ const Player: React.FC<Props> = props => {
    * 動画の長さ(秒)を取得
    */
   const getDuration = () => {
-    if (!isReady) return -1;
-    return player!.getDuration();
+    if (!isReady.current || player.current === null) return -1;
+    return player.current.getDuration();
   };
 
   /**
    * 動画の現在の再生時間を取得
    */
   const getCurrentTime = () => {
-    if (!isReady) return -1;
-    if (player!.getPlayerState() === 0) return getDuration();
-    return player!.getCurrentTime();
+    if (!isReady.current || player.current === null) return -1;
+    if (player.current.getPlayerState() === 0) return getDuration();
+    return player.current.getCurrentTime();
   };
 
   /**
    * 動画の音量を取得
    */
   const getVolume = () => {
-    if (!isReady) return;
+    if (!isReady.current || player.current === null) return;
     return {
-      value: player!.getVolume(),
-      isMuted: player!.isMuted()
+      value: player.current.getVolume(),
+      isMuted: player.current.isMuted()
     };
   };
 
@@ -154,24 +154,24 @@ const Player: React.FC<Props> = props => {
    * @param volume 音量
    */
   const setVolume = (volume: number) => {
-    if (!isReady) return;
-    player!.setVolume(volume);
+    if (!isReady.current || player.current === null) return;
+    player.current.setVolume(volume);
   };
 
   /**
    * 動画を再生
    */
   const playVideo = () => {
-    if (!isReady) return;
-    player!.playVideo();
+    if (!isReady.current || player.current === null) return;
+    player.current.playVideo();
   };
 
   /**
-   * 動画を一時停止
+   * 動画を一時停止enn
    */
   const pauseVideo = () => {
-    if (!isReady) return;
-    player!.pauseVideo();
+    if (!isReady.current || player.current === null) return;
+    player.current.pauseVideo();
   };
 
   /**
@@ -179,8 +179,8 @@ const Player: React.FC<Props> = props => {
    * @param seconds 再生位置(秒)
    */
   const seekTo = (seconds: number) => {
-    if (!isReady) return;
-    player!.seekTo(seconds, true);
+    if (!isReady.current || player.current === null) return;
+    player.current.seekTo(seconds, true);
     if (commentCanvas.current !== null) commentCanvas.current.seekTimeline(seconds);
   };
 
@@ -188,16 +188,16 @@ const Player: React.FC<Props> = props => {
    * 動画をミュートにする
    */
   const mute = () => {
-    if (!isReady) return;
-    player!.mute();
+    if (!isReady.current || player.current === null) return;
+    player.current.mute();
   };
 
   /**
    * 動画のミュートを解除
    */
   const unMute = () => {
-    if (!isReady) return;
-    player!.unMute();
+    if (!isReady.current || player.current === null) return;
+    player.current.unMute();
   };
 
   return (
