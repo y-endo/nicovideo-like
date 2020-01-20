@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const mode = process.env.NODE_ENV !== 'production' ? 'development' : 'production';
 
@@ -50,5 +51,14 @@ module.exports = {
             })
           ]
         }
-      : {}
+      : {},
+  plugins:
+    mode === 'production'
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: path.join(__dirname, './analyzer/report.html')
+          })
+        ]
+      : []
 };
